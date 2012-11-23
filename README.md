@@ -1,4 +1,4 @@
 towersofhanoi
 =============
 
-towers of hanoi
+an animated representation for towers of hanoi
