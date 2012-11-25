@@ -52,9 +52,26 @@ public class TowersOfHanoi{
 	
     public static void main(String[] args){
 	TowersOfHanoi t = new TowersOfHanoi();
-	for(int numDisk : t.start(1, 1, 3)){
-	    System.out.println(numDisk);
+	if(args.length < 3){
+	    System.out.println("java TowerOfHanoi startDisk endDisk numDisk");
+	    return;
 	}
+	int startDisk = Integer.parseInt(args[0]);
+	int endDisk = Integer.parseInt(args[1]);
+	int numDisk = Integer.parseInt(args[2]);
+	if(erroneousInput(startDisk, endDisk)){
+	    System.out.println("Input is incorrect");
+	    return;
+	}
+	
+	for(int diskOnPole : t.start(numDisk, startDisk, endDisk)){
+	    System.out.println(diskOnPole);
+	}
+    }
+
+    private static boolean erroneousInput(int startDisk, int endDisk){
+	return ((startDisk == endDisk) || (startDisk > 3) ||
+		(endDisk > 3) || (startDisk < 1) || (endDisk < 1));
     }
 	
     private Pole[] poles;
