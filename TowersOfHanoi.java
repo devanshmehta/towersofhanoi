@@ -1,4 +1,32 @@
+import java.util.List;
+import java.util.ArrayList;
+import javax.swing.*;
+import java.awt.event.*;
+import java.awt.*;
+
 public class TowersOfHanoi{
+
+    public TowersOfHanoi(){
+	moveListeners = new ArrayList<MoveListener>();
+    }
+    
+    /**
+     * Adds a move listener. 
+     * 
+     * @return true if it successfully adds listener and false
+     *         otherwise
+     */
+    public boolean addMoveListener(MoveListener listener){
+	if(!moveListeners.contains(listener)){
+	    return moveListeners.add(listener);
+	}
+	return false;
+    }
+
+    //True if it successfully removes listener and false otherwise
+    public boolean removeMoveListener(MoveListener listener){
+	return moveListeners.remove(listener);
+    }
 
     //start pole and end pole are one based
     //returns number of disks on each pole
@@ -13,6 +41,12 @@ public class TowersOfHanoi{
 	    numDiskOnPoles[i] = poles[i].size();
 	}
 	return numDiskOnPoles;
+    }
+
+    private void notifyListeners(int diskNum, int startPole, int endPole){
+	for(MoveListener listener : moveListeners){
+	    listener.move(diskNum, startPole, endPole);
+	}
     }
 
     private void createPoles(int numDisks){
@@ -37,6 +71,7 @@ public class TowersOfHanoi{
 	}
 	if(startNum == endNum){
 	    poles[toPole].push(poles[fromPole].pop());
+	    notifyListeners(startNum, fromPole, toPole);
 	    return;
 	}
 	int remainingPole = remainingPole(fromPole ,toPole);
@@ -49,30 +84,7 @@ public class TowersOfHanoi{
 	int totalSum = 0 + 1 + 2;
 	return totalSum - firstPole - anotherPole;
     }
-	
-    public static void main(String[] args){
-	TowersOfHanoi t = new TowersOfHanoi();
-	if(args.length < 3){
-	    System.out.println("java TowerOfHanoi startDisk endDisk numDisk");
-	    return;
-	}
-	int startDisk = Integer.parseInt(args[0]);
-	int endDisk = Integer.parseInt(args[1]);
-	int numDisk = Integer.parseInt(args[2]);
-	if(erroneousInput(startDisk, endDisk)){
-	    System.out.println("Input is incorrect");
-	    return;
-	}
-	
-	for(int diskOnPole : t.start(numDisk, startDisk, endDisk)){
-	    System.out.println(diskOnPole);
-	}
-    }
-
-    private static boolean erroneousInput(int startDisk, int endDisk){
-	return ((startDisk == endDisk) || (startDisk > 3) ||
-		(endDisk > 3) || (startDisk < 1) || (endDisk < 1));
-    }
-	
+		
+    private List<MoveListener> moveListeners;
     private Pole[] poles;
 }
